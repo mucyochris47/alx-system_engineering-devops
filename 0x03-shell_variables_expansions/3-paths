@@ -1,4 +1,2 @@
 #!/bin/bash
-IFS=':' read -ra PATH_ARRAY <<< "$PATH"
-num_dirs="${#PATH_ARRAY[@]}"
-echo "$num_dirs"
+echo $((' echo $PATH | grep -0 ":/" | wc -1 '  +1))
