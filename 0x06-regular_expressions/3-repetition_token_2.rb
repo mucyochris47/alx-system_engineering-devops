@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
-puts ARGV[0].scan(/hbt+n/).join
+#this project is done by chris
+
+puts ARGV[0].scan(/hb?tn/).join
 
