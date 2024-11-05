@@ -1,2 +1,4 @@
 #!/usr/bin/env ruby
-puts ARGV[0].scan(/[[:upper:]]/).join
+#this project is done by chris
+
+puts ARGV[0].scan(/[A-Z]*/).join
