@@ -1,32 +1,19 @@
-# Puppet manifest to configure the SSH client
-
-file { '/home/ubuntu/.ssh/config':
-  ensure  => 'file',
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
-  mode    => '0600',
-  content => "
-    # SSH Client Configuration for connecting to the server using the school private key
-
-    Host *
-        IdentityFile ~/.ssh/school
-        PasswordAuthentication no
-  ",
+#!/usr/bin/env bash
+# Client configuration file (w/ Puppet)
+file {'/etc/ssh/shh_config':
+	ensure  => 'present',
 }
 
-# Ensure that SSH client uses the correct private key
-file_line { 'Declare identity file':
-  ensure => 'present',
-  path   => '/home/ubuntu/.ssh/config',
-  line   => 'IdentityFile ~/.ssh/school',
-  match  => '^#?IdentityFile',
+file_line {'Turn off passwd auth':
+	path    => '/etc/ssh/ssh_config',
+	line    => 'PasswordAuthentication no',
+	match   => 'PasswordAuthentication yes',
+	replace => 'true',
+	
 }
-
-# Ensure password authentication is disabled
-file_line { 'Turn off passwd auth':
-  ensure => 'present',
-  path   => '/home/ubuntu/.ssh/config',
-  line   => 'PasswordAuthentication no',
-  match  => '^#?PasswordAuthentication',
+file_line {'Declare identity file':
+	path    => '/etc/ssh/ssh_config',
+	line    => 'IdentityFile ~/.ssh/school',
+	match   => '^IdentityFile',
+	ensure  => 'present',
 }
-
