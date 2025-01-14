@@ -1,17 +1,11 @@
-#!/bin/bash
-# Install Nginx (if not already installed)
-sudo apt update
-sudo apt install -y nginx
+#!/usr/bin/env bash
+# Bash script that configures a Ubuntu machine
+# so that /redirect_me is redirecting to another page
 
-# Create a custom Nginx configuration to redirect /redirect_me
-sudo sed -i '/location \/ {/a \
-    location /redirect_me/ {\
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\
-    }' /etc/nginx/sites-available/default
-
-# Set the server_name to your domain
-sudo sed -i 's/# server_name _;/server_name christechcoder.tech;/' /etc/nginx/sites-available/default
-
-# Restart Nginx to apply the changes
-sudo systemctl restart nginx
+apt-get update -y
+apt-get install nginx -y
+ufw allow 80
+sh -c 'echo "Hello World!" > /var/www/html/index.html'
+sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/ permanent;' /etc/nginx/sites-available/default
+service nginx restart
 
