@@ -1,23 +1,10 @@
 #!/usr/bin/env bash
-# Bash script that configures an Ubuntu machine
-# so that /redirect_me redirects to another page
+# Bash script that configures a Ubuntu machine
+# so that /redirect_me is redirecting to another page
 
-# Update and install Nginx
 apt-get update -y
 apt-get install nginx -y
-
-# Allow HTTP traffic on the firewall
-ufw allow 'Nginx HTTP'
-
-# Create an initial "Hello World!" index page
+ufw allow 80
 sh -c 'echo "Hello World!" > /var/www/html/index.html'
-
-# Add the redirect for /redirect_me to YouTube in Nginx configuration
-sed -i '/listen 80 default_server/a \
-    location /redirect_me { \
-        rewrite ^/redirect_me$ https://www.youtube.com/ permanent; \
-    }' /etc/nginx/sites-available/default
-
-# Restart Nginx to apply the changes
+sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/ permanent;' /etc/nginx/sites-available/default
 service nginx restart
-
