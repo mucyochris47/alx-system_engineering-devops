@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# fixing commands with bash
-# make the apache server print Hello Holberton
+# fixing issue arised from using docker
+# make the apache server return Hello Holberton when querying the root
 
 sudo apt-get update -y
 sudo apt-get install -y apache2
