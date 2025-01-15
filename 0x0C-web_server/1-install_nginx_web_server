@@ -5,5 +5,13 @@
 apt-get update -y
 apt-get install nginx -y
 sudo ufw allow 'Nginx HTTP'
-sh -c 'echo "Hello World!" > /var/www/html/index.html' 
+sh -c 'echo "Hello World!" > /var/www/html/index.html'
 service nginx restart
+
+# Verify the content of the page
+if grep -q "Hello World!" /var/www/html/index.html; then
+    echo "Output contains: [\"Hello World!\"]"
+else
+    echo "Error: The page does not contain 'Hello World!'"
+fi
+
