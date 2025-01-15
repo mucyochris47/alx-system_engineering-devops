@@ -1,37 +1,23 @@
 #!/usr/bin/env bash
-# Configures a new Ubuntu machine by installing
-# Nginx where it should be listening on port 80
-# Serve a page that would return a Hello World string
-# and redirect /redirect_me to your URL.
+# Bash script that configures an Ubuntu machine
+# so that /redirect_me redirects to another page
 
+# Update and install Nginx
+apt-get update -y
+apt-get install nginx -y
 
-echo -e "Updating and installing Nginx.\n"
-sudo apt-get update -y -qq && \
-         sudo apt-get install nginx -y
+# Allow HTTP traffic on the firewall
+ufw allow 'Nginx HTTP'
 
-echo -e "\nSetting up some minor stuff.\n"
+# Create an initial "Hello World!" index page
+sh -c 'echo "Hello World!" > /var/www/html/index.html'
 
-# Starting Nginx service
-sudo service nginx start
+# Add the redirect for /redirect_me to YouTube in Nginx configuration
+sed -i '/listen 80 default_server/a \
+    location /redirect_me { \
+        rewrite ^/redirect_me$ https://www.youtube.com/ permanent; \
+    }' /etc/nginx/sites-available/default
 
-# Allowing Nginx on the firewall
-sudo ufw allow 'Nginx HTTP'
-
-# Give the user ownership of website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
-
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
-
-# Creating new index
-echo -e "Hello World!" > /var/www/html/index.nginx-debian.html
-
-# Setting up /redirect_me to your website
-sudo sed -i '/^\s*server\s*{/,/^\s*}/ s|^\s*location / {|&\n        rewrite ^/redirect_me http://christechcoder.tech/ permanent;|' /etc/nginx/sites-available/default
-
-# Restarting Nginx
-sudo service nginx restart
-
-echo -e "\nCompleted.\n"
+# Restart Nginx to apply the changes
+service nginx restart
 
