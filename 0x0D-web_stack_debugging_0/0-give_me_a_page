@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
-# Fixing issue for Apache server to return Hello ALX when querying the root
+# fixing commands with bash
+# make the apache server print Hello Holberton
 
-# Update package lists
-apt-get update -y
-
-# Install Apache
-apt-get install -y apache2
-
-# Start Apache service
-/etc/init.d/apache2 start
-
-# Add Hello ALX to the index page
-echo "Hello ALX" > /var/www/html/index.html
-
-# Restart Apache service to apply changes
-/etc/init.d/apache2 restart
-
+sudo apt-get update -y
+sudo apt-get install -y apache2
+sudo /etc/init.d/apache2 start
+echo "Hello Holberton" | sudo tee -a /var/www/html/index.html
+sudo /etc/init.d/apache2 restart
