@@ -1,50 +1,36 @@
 #!/usr/bin/env bash
 # Installs Nginx with the following configurations:
-# - Listens on port 80.
-# - Returns a page containing "Holberton School" when queried
-#   at the root with a curl GET request.
-# - Configures /redirect_me as a "301 Moved Permanently".
-# - Includes a custom 404 page containing "Ceci n'est pas une page".
-# - Adds a custom header X-Served-By with the server's hostname.
+#+    Listens on port 80.
+#+    Returns a page containing "Holberton School" when queried
+#+     at the root with a curl GET request.
+# Configures /redirect_me as a "301 Moved Permanently".
+# Includes a custom 404 page containing "Ceci n'est pas une page".
 
-# Update and install Nginx
 apt-get update
 apt-get install -y nginx
 
-# Create the necessary directories and files
-mkdir -p /etc/nginx/html
-echo "Holberton School" > /etc/nginx/html/index.html
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Hello World!" > /etc/nginx/html/index.html
+touch /etc/nginx/html/404.html
 echo "Ceci n'est pas une page" > /etc/nginx/html/404.html
 
-# Get the hostname of the server
-hostname=$(hostname)
-
-# Configure Nginx with the necessary settings
-printf "%s" "server {
-    listen 80 default_server;
+printf %s "server {
+    listen 80;
     listen [::]:80 default_server;
-
-    root /etc/nginx/html;
-    index index.html index.htm;
-
-    server_name _;
-
-    location / {
-        try_files \$uri \$uri/ =404;
-    }
+    add_header X-Served-By $HOSTNAME;
+    root   /etc/nginx/html;
+    index  index.html index.htm;
 
     location /redirect_me {
         return 301 http://cuberule.com/;
     }
 
     error_page 404 /404.html;
-    location = /404.html {
-        internal;
+    location /404 {
+      root /etc/nginx/html;
+      internal;
     }
-
-    add_header X-Served-By \"$hostname\";
 }" > /etc/nginx/sites-available/default
 
-# Restart Nginx to apply changes
 service nginx restart
-
